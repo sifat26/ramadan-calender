@@ -50,13 +50,7 @@
             <div class="inline-block px-4 py-1 bg-green-100 text-green-800 rounded-full text-sm font-bold animate-pulse">
                 <span x-text="nextEventName">লোড হচ্ছে...</span>
             </div>
-            <p class="text-xs text-gray-500 mt-2" x-text="'টার্গেট সময়: ' + convertToBanglaTime(nextEventTime)"></p>
-        </div>
-
-        <div class="bg-white rounded-xl shadow-md p-4 mb-6 text-center border-l-4 border-islamic-700">
-            <h3 class="text-islamic-900 font-bold text-sm mb-1">ইফতারের দোয়া</h3>
-            <p class="text-gray-700 italic text-lg">"আল্লাহুম্মা লাকা সুমতু ওয়া আলা রিযকিকা আফতারতু"</p>
-            <p class="text-xs text-gray-500 mt-1">অর্থ: হে আল্লাহ! আমি তোমারই সন্তুষ্টির জন্য রোজা রেখেছি এবং তোমারই দেয়া রিজিক দ্বারা ইফতার করছি।</p>
+            <p class="text-xs text-gray-500 mt-2" x-text="nextEventTime ? 'টার্গেট সময়: ' + convertToBanglaTime(nextEventTime) : ''"></p>
         </div>
 
         <div class="bg-white rounded-xl shadow-lg overflow-hidden">
@@ -102,7 +96,7 @@
     </main>
 
     <footer class="bg-gray-800 text-gray-400 py-4 text-center text-xs">
-        <p>Developed by Universaltech Research & Development</p>
+        <p>Developed by Tanvir Ahmmed Sifat</p>
     </footer>
 
     <script>
@@ -157,7 +151,6 @@
                 // Get local date string YYYY-MM-DD
                 getLocalDateString() {
                     const now = new Date();
-                    // Manually construct YYYY-MM-DD to avoid UTC issues
                     const offset = now.getTimezoneOffset();
                     const localDate = new Date(now.getTime() - (offset * 60 * 1000));
                     return localDate.toISOString().split('T')[0];
@@ -168,7 +161,6 @@
                 },
 
                 formatDate(dateStr) {
-                    // Example: 2026-02-19 -> 19 Feb
                     const date = new Date(dateStr);
                     const months = ["জানু", "ফেব্রু", "মার্চ", "এপ্রিল", "মে", "জুন", "জুলাই", "আগস্ট", "সেপ্টে", "অক্টো", "নভে", "ডিসে"];
                     const d = date.getDate();
@@ -184,7 +176,6 @@
 
                 convertToBanglaTime(timeStr) {
                     if(!timeStr) return '';
-                    // Simple replacement
                     return this.toBangla(timeStr);
                 },
 
@@ -200,15 +191,13 @@
                     const now = new Date();
                     const todayStr = this.getLocalDateString();
                     
-                    // Find today's schedule
                     let todayData = this.schedule.find(d => d.date === todayStr);
 
-                    // Helper to create Date objects from time strings
                     const createDate = (baseDateStr, timeStr, isPM) => {
-                        const d = new Date(baseDateStr + 'T00:00:00'); // set to midnight
+                        const d = new Date(baseDateStr + 'T00:00:00');
                         const [h, m] = timeStr.split(':').map(Number);
                         let hours = h;
-                        if (isPM && h < 12) hours += 12; // Convert PM to 24h
+                        if (isPM && h < 12) hours += 12; 
                         d.setHours(hours, m, 0, 0);
                         return d;
                     };
@@ -216,39 +205,32 @@
                     let targetDate;
                     
                     if (todayData) {
-                        const sehriTime = createDate(todayStr, todayData.sehri, false); // AM
-                        const iftarTime = createDate(todayStr, todayData.iftar, true);  // PM
+                        const sehriTime = createDate(todayStr, todayData.sehri, false); 
+                        const iftarTime = createDate(todayStr, todayData.iftar, true);  
 
                         if (now < sehriTime) {
-                            // Before Sehri Ends
                             targetDate = sehriTime;
                             this.nextEventName = "সাহরীর শেষ সময়";
                             this.nextEventLabel = "সাহরীর বাকি";
                             this.nextEventTime = todayData.sehri;
                         } else if (now >= sehriTime && now < iftarTime) {
-                            // Fasting time (Wait for Iftar)
                             targetDate = iftarTime;
                             this.nextEventName = "ইফতারের সময়";
                             this.nextEventLabel = "ইফতারের বাকি";
                             this.nextEventTime = todayData.iftar;
                         } else {
-                            // Iftar passed, show tomorrow's Sehri
                             this.setTomorrowSehri(now);
                             return; 
                         }
                     } else {
-                        // If today is not in list (e.g. before start or after end), check range
-                        // Simple logic: Look for next available date
                         const futureDates = this.schedule.filter(d => new Date(d.date) > new Date(todayStr));
                         if(futureDates.length > 0) {
-                             // Next fasting day hasn't started yet
                              const nextDay = futureDates[0];
                              targetDate = createDate(nextDay.date, nextDay.sehri, false);
                              this.nextEventName = "প্রথম রোজা (সাহরী)";
                              this.nextEventTime = nextDay.sehri;
                              this.nextEventLabel = "রমজান শুরু হতে বাকি";
                         } else {
-                            // Ended
                             this.timeLeft = "ঈদ মোবারক";
                             this.nextEventName = "ঈদ মোবারক";
                             this.nextEventTime = "";
@@ -263,7 +245,6 @@
                 },
 
                 setTomorrowSehri(now) {
-                    // Find tomorrow's date
                     const tomorrow = new Date(now);
                     tomorrow.setDate(tomorrow.getDate() + 1);
                     const tomorrowStr = tomorrow.toISOString().split('T')[0];
@@ -295,7 +276,6 @@
                         this.timeLeft = `${this.toBangla(h).padStart(2, '0')}:${this.toBangla(m).padStart(2, '0')}:${this.toBangla(s).padStart(2, '0')}`;
                     } else {
                         this.timeLeft = "00:00:00";
-                        // Optionally force a re-check immediately
                         this.updateTimer();
                     }
                 }
