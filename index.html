@@ -18,7 +18,17 @@
                 extend: {
                     fontFamily: { sans: ['Noto Sans Bengali', 'sans-serif'] },
                     colors: {
-                        islamic: { 500: '#22c55e', 700: '#15803d', 900: '#14532d', gold: '#fbbf24' }
+                        islamic: { 
+                            500: '#22c55e', 
+                            700: '#15803d', 
+                            800: '#166534',
+                            900: '#14532d', 
+                            gold: '#fbbf24',
+                            goldDark: '#d97706'
+                        }
+                    },
+                    backgroundImage: {
+                        'pattern-islamic': "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l15 30-15 30L15 30z' fill='%2315803d' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E\")"
                     }
                 }
             }
@@ -26,61 +36,101 @@
     </script>
     <style>
         [x-cloak] { display: none !important; }
-        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .glass { background: rgba(255, 255, 255, 0.97); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); }
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #15803d; border-radius: 10px; }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex flex-col" x-data="ramadanApp()" x-init="initApp()">
+<body class="bg-gray-50 bg-pattern-islamic text-gray-800 font-sans min-h-screen flex flex-col" x-data="ramadanApp()" x-init="initApp()">
 
-    <header class="bg-islamic-900 text-white shadow-lg py-6 text-center relative overflow-hidden">
-        <div class="relative z-10">
-            <h1 class="text-3xl md:text-4xl font-bold text-islamic-gold mb-1">তোহফায়ে রামাযান</h1>
-            <p class="text-sm opacity-90">সাহরী ও ইফতারের সময়সূচী - ২০২৬ (টাঙ্গাইল জেলা)</p>
+    <header class="bg-gradient-to-b from-islamic-900 to-islamic-800 text-white shadow-lg pt-8 pb-24 text-center relative overflow-hidden">
+        <div class="absolute top-4 left-6 text-islamic-gold opacity-30 animate-pulse">
+            <i class="fas fa-moon text-4xl"></i>
+            <i class="fas fa-star text-xl absolute -top-2 right-[-20px]"></i>
         </div>
+
+        <div class="relative z-10 px-4">
+            <h1 class="text-4xl md:text-5xl font-bold text-islamic-gold mb-2 drop-shadow-md">তোহফায়ে রামাযান</h1>
+            <p class="text-base md:text-lg opacity-90 text-islamic-100">সাহরী ও ইফতারের সময়সূচী - ২০২৬ (টাঙ্গাইল জেলা)</p>
+        </div>
+
+        <div class="absolute bottom-0 left-0 w-full text-islamic-700 opacity-40 pointer-events-none leading-none">
+            <svg class="w-full h-auto md:h-32 lg:h-48" preserveAspectRatio="none" viewBox="0 0 1200 320" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,320L0,280C100,280,120,240,160,240C190,240,200,190,230,190C260,190,270,220,300,220C330,220,340,160,380,160C420,160,440,260,480,260C520,260,540,200,580,200C620,200,630,280,680,280C720,280,750,220,790,220C830,220,850,260,900,260C940,260,960,210,1000,210C1040,210,1060,260,1100,260C1140,260,1180,300,1200,320L0,320Z"></path>
+                <path d="M140,240 L140,160 M180,240 L180,180" stroke="currentColor" stroke-width="4" opacity="0.5"/>
+                <circle cx="160" cy="160" r="20" fill="currentColor" />
+                <rect x="155" y="130" width="10" height="30" fill="currentColor"/>
+                
+                <path d="M360,160 L360,80 M400,160 L400,100" stroke="currentColor" stroke-width="5" opacity="0.5"/>
+                <circle cx="380" cy="80" r="25" fill="currentColor" />
+                <rect x="375" y="40" width="10" height="40" fill="currentColor"/>
+            </svg>
+        </div>
+        <div class="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-gray-50 to-transparent"></div>
     </header>
 
-    <main class="container mx-auto px-4 -mt-4 relative z-20 pb-10 max-w-3xl flex-grow">
+    <main class="container mx-auto px-4 -mt-16 relative z-20 pb-10 max-w-3xl flex-grow">
         
-        <div class="glass rounded-xl shadow-xl p-6 text-center border-t-4 border-islamic-gold mb-6 transform transition hover:scale-[1.01]">
-            <h2 class="text-lg font-semibold text-gray-600" x-text="nextEventLabel">পরবর্তী সময় বাকি</h2>
-            <div class="text-5xl font-bold text-islamic-900 my-2 font-mono" x-text="timeLeft">--:--:--</div>
-            <div class="inline-block px-4 py-1 bg-green-100 text-green-800 rounded-full text-sm font-bold animate-pulse">
-                <span x-text="nextEventName">লোড হচ্ছে...</span>
+        <div class="glass rounded-2xl shadow-xl p-6 text-center border-t-4 border-islamic-gold mb-8 transform transition hover:-translate-y-1 relative overflow-hidden">
+            
+            <div class="absolute top-0 right-4 text-islamic-gold opacity-20 pointer-events-none">
+                <svg width="80" height="120" viewBox="0 0 80 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M40 0V20" stroke="currentColor" stroke-width="2"/>
+                    <path d="M20 30H60L70 50H10L20 30Z" fill="currentColor" opacity="0.8"/>
+                    <rect x="15" y="50" width="50" height="50" rx="4" fill="currentColor" opacity="0.6"/>
+                    <path d="M15 100L40 120L65 100H15Z" fill="currentColor" opacity="0.8"/>
+                    <circle cx="40" cy="75" r="10" fill="#fff" opacity="0.7"/>
+                </svg>
             </div>
-            <p class="text-xs text-gray-500 mt-2" x-text="nextEventTime ? 'টার্গেট সময়: ' + convertToBanglaTime(nextEventTime) : ''"></p>
+            <div class="absolute top-0 left-4 text-islamic-goldDark opacity-10 pointer-events-none transform scale-75">
+                 <svg width="80" height="120" viewBox="0 0 80 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M40 0V20" stroke="currentColor" stroke-width="2"/>
+                    <path d="M20 30H60L70 50H10L20 30Z" fill="currentColor" opacity="0.8"/>
+                    <rect x="15" y="50" width="50" height="50" rx="4" fill="currentColor" opacity="0.6"/>
+                    <path d="M15 100L40 120L65 100H15Z" fill="currentColor" opacity="0.8"/>
+                </svg>
+            </div>
+
+            <div class="relative z-10 py-2">
+                <h2 class="text-lg md:text-xl font-semibold text-islamic-800" x-text="nextEventLabel">পরবর্তী সময় বাকি</h2>
+                <div class="text-5xl md:text-7xl font-extrabold text-islamic-900 my-3 font-mono tracking-tight drop-shadow-sm" x-text="timeLeft">--:--:--</div>
+                <div class="inline-block px-6 py-2 bg-islamic-700 text-white rounded-full text-base font-bold shadow-md animate-pulse ring-4 ring-green-100">
+                    <i class="fas fa-clock mr-2"></i><span x-text="nextEventName">লোড হচ্ছে...</span>
+                </div>
+                <p class="text-sm text-gray-600 mt-4 font-medium" x-text="nextEventTime ? 'টার্গেট সময়: ' + convertToBanglaTime(nextEventTime) : ''"></p>
+            </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-            <div class="bg-islamic-700 text-white p-3 flex justify-between items-center">
-                <h3 class="font-bold"><i class="fas fa-calendar-alt mr-2"></i>সময়সূচী</h3>
-                <button @click="scrollToToday()" class="text-xs bg-white text-islamic-900 px-3 py-1 rounded font-bold hover:bg-gray-200 transition">
-                    আজকের তারিখ
+        <div class="bg-white/90 backdrop-blur-md rounded-xl shadow-lg overflow-hidden border border-gray-200">
+            <div class="bg-islamic-700 p-4 flex justify-between items-center text-white bg-[url('https://www.transparenttextures.com/patterns/arabesque.png')]">
+                <h3 class="font-bold text-lg"><i class="fas fa-scroll mr-2 text-islamic-gold"></i>সময়সূচী</h3>
+                <button @click="scrollToToday()" class="text-xs bg-islamic-gold text-islamic-900 px-4 py-2 rounded-full font-bold hover:bg-yellow-400 transition shadow-sm flex items-center">
+                    <i class="fas fa-calendar-day mr-1"></i> আজকের তারিখ
                 </button>
             </div>
             
-            <div class="overflow-x-auto max-h-[450px] overflow-y-auto relative scroll-smooth" id="schedule-container">
+            <div class="overflow-x-auto max-h-[500px] overflow-y-auto relative scroll-smooth" id="schedule-container">
                 <table class="w-full text-center border-collapse">
-                    <thead class="bg-gray-100 sticky top-0 shadow-sm z-10 text-sm text-gray-700">
+                    <thead class="bg-gray-100/95 sticky top-0 shadow-sm z-10 text-sm text-gray-700 uppercase tracking-wider">
                         <tr>
-                            <th class="p-3">রমজান</th>
-                            <th class="p-3">তারিখ</th>
-                            <th class="p-3">বার</th>
-                            <th class="p-3 text-red-600">সাহরীর শেষ</th>
-                            <th class="p-3 text-green-700">ইফতার</th>
+                            <th class="p-4 font-semibold">রমজান</th>
+                            <th class="p-4 font-semibold">তারিখ</th>
+                            <th class="p-4 font-semibold">বার</th>
+                            <th class="p-4 font-bold text-red-700 bg-red-50/50">সাহরীর শেষ</th>
+                            <th class="p-4 font-bold text-islamic-800 bg-green-50/50">ইফতার</th>
                         </tr>
                     </thead>
-                    <tbody class="text-sm">
+                    <tbody class="text-sm divide-y divide-gray-100">
                         <template x-for="day in schedule" :key="day.ramadan">
                             <tr :id="'day-' + day.date" 
-                                :class="{'bg-green-100 font-bold border-l-4 border-green-600': isToday(day.date), 'hover:bg-gray-50 border-b border-gray-100': !isToday(day.date)}">
-                                <td class="p-3" x-text="toBangla(day.ramadan)"></td>
-                                <td class="p-3" x-text="formatDate(day.date)"></td>
-                                <td class="p-3" x-text="day.dayBangla"></td>
-                                <td class="p-3" x-text="convertToBanglaTime(day.sehri)"></td>
-                                <td class="p-3" x-text="convertToBanglaTime(day.iftar)"></td>
+                                :class="{'bg-green-100/80 font-bold border-l-4 border-islamic-600 shadow-inner': isToday(day.date), 'hover:bg-gray-50 transition-colors': !isToday(day.date)}">
+                                <td class="p-4" x-text="toBangla(day.ramadan)"></td>
+                                <td class="p-4 text-gray-600" x-text="formatDate(day.date)"></td>
+                                <td class="p-4 text-gray-600" x-text="day.dayBangla"></td>
+                                <td class="p-4 font-semibold text-red-600 bg-red-50/30" x-text="convertToBanglaTime(day.sehri)"></td>
+                                <td class="p-4 font-semibold text-islamic-800 bg-green-50/30" x-text="convertToBanglaTime(day.iftar)"></td>
                             </tr>
                         </template>
                     </tbody>
@@ -88,15 +138,19 @@
             </div>
         </div>
 
-        <div class="mt-6 text-center border-t pt-4">
-            <p class="text-sm font-semibold text-islamic-900">সৌজন্যে: বাংলাদেশ আহলেহাদীছ যুবসংঘ</p>
-            <p class="text-xs text-gray-500">টাঙ্গাইল জেলা শাখা</p>
+        <div class="mt-8 text-center border-t border-gray-300 pt-6">
+            <p class="text-base font-bold text-islamic-900 mb-1">সৌজন্যে: বাংলাদেশ আহলেহাদীছ যুবসংঘ</p>
+            <p class="text-sm text-gray-600 font-medium">টাঙ্গাইল জেলা শাখা</p>
         </div>
 
     </main>
 
-    <footer class="bg-gray-800 text-gray-400 py-4 text-center text-xs">
-        <p>Developed by Tanvir Ahmmed Sifat</p>
+    <footer class="bg-islamic-900 text-islamic-100 py-6 text-center text-sm relative overflow-hidden">
+         <div class="absolute bottom-0 left-0 opacity-10 text-islamic-gold pointer-events-none">
+            <i class="fas fa-mosque text-6xl -mb-4 -ml-2"></i>
+        </div>
+        <p class="font-medium">Developed by <span class="text-islamic-gold">Tanvir Ahmmed Sifat</span></p>
+        <p class="text-xs mt-1 opacity-70">© 2026 All Rights Reserved.</p>
     </footer>
 
     <script>
@@ -144,11 +198,9 @@
                 initApp() {
                     this.updateTimer();
                     setInterval(() => this.updateTimer(), 1000);
-                    // Wait for DOM to render then scroll
                     setTimeout(() => this.scrollToToday(), 500);
                 },
 
-                // Get local date string YYYY-MM-DD
                 getLocalDateString() {
                     const now = new Date();
                     const offset = now.getTimezoneOffset();
