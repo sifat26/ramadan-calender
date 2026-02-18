@@ -14,12 +14,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Noto Sans Bengali', 'sans-serif'] },
-                    colors: {
-                        islamic: { 500: '#22c55e', 700: '#15803d', 900: '#14532d', gold: '#fbbf24' }
+        // Safely configure Tailwind only if it's loaded
+        if (typeof tailwind !== 'undefined') {
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: { sans: ['Noto Sans Bengali', 'sans-serif'] },
+                        colors: {
+                            islamic: { 500: '#22c55e', 700: '#15803d', 900: '#14532d', gold: '#fbbf24' }
+                        }
                     }
                 }
             }
