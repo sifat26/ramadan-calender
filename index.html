@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramadan Calendar 2026 - Tangail</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Noto Sans Bengali', 'sans-serif'] },
+                    colors: {
+                        islamic: { 500: '#22c55e', 700: '#15803d', 900: '#14532d', gold: '#fbbf24' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        [x-cloak] { display: none !important; }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex flex-col" x-data="ramadanApp()" x-init="initApp()">
+
+    <header class="bg-islamic-900 text-white shadow-lg py-6 text-center relative overflow-hidden">
+        <div class="relative z-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-islamic-gold mb-1">তোহফায়ে রামাযান</h1>
+            <p class="text-sm opacity-90">সাহরী ও ইফতারের সময়সূচী - ২০২৬ (টাঙ্গাইল জেলা)</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 -mt-4 relative z-20 pb-10 max-w-3xl flex-grow">
+        
+        <div class="glass rounded-xl shadow-xl p-6 text-center border-t-4 border-islamic-gold mb-6 transform transition hover:scale-[1.01]">
+            <h2 class="text-lg font-semibold text-gray-600">পরবর্তী সময় বাকি</h2>
+            <div class="text-5xl font-bold text-islamic-900 my-2 font-mono" x-text="timeLeft">00:00:00</div>
+            <div class="inline-block px-4 py-1 bg-green-100 text-green-800 rounded-full text-sm font-bold animate-pulse">
+                <span x-text="nextEventName">Loading...</span>
+            </div>
+            <p class="text-xs text-gray-500 mt-2" x-text="'Target Time: ' + nextEventTime"></p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md p-4 mb-6 text-center border-l-4 border-islamic-700">
+            <h3 class="text-islamic-900 font-bold text-sm mb-1">ইফতারের দোয়া</h3>
+            <p class="text-gray-700 italic text-lg">"আল্লাহুম্মা লাকা সুমতু ওয়া আলা রিযকিকা আফতারতু"</p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="bg-islamic-700 text-white p-3 flex justify-between items-center">
+                <h3 class="font-bold"><i class="fas fa-calendar-alt mr-2"></i>সময়সূচী</h3>
+                <button @click="scrollToToday()" class="text-xs bg-white text-islamic-900 px-3 py-1 rounded font-bold hover:bg-gray-200 transition">
+                    আজকের তারিখ
+                </button>
+            </div>
+            
+            <div class="overflow-x-auto max-h-[450px] overflow-y-auto relative scroll-smooth" id="schedule-container">
+                <table class="w-full text-center border-collapse">
+                    <thead class="bg-gray-100 sticky top-0 shadow-sm z-10 text-sm text-gray-700">
+                        <tr>
+                            <th class="p-3">রমজান</th>
+                            <th class="p-3">তারিখ</th>
+                            <th class="p-3">বার</th>
+                            <th class="p-3 text-red-600">সাহরীর শেষ</th>
+                            <th class="p-3 text-green-700">ইফতার</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        <template x-for="day in schedule" :key="day.ramadan">
+                            <tr :id="'day-' + day.date" 
+                                :class="{'bg-green-50 font-bold border-l-4 border-green-600': isToday(day.date), 'hover:bg-gray-50 border-b border-gray-100': !isToday(day.date)}">
+                                <td class="p-3" x-text="toBangla(day.ramadan)"></td>
+                                <td class="p-3" x-text="formatDate(day.date)"></td>
+                                <td class="p-3" x-text="day.dayBangla"></td>
+                                <td class="p-3" x-text="day.sehri"></td>
+                                <td class="p-3" x-text="day.iftar"></td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="mt-6 text-center border-t pt-4">
+            <p class="text-sm font-semibold text-islamic-900">সৌজন্যে: বাংলাদেশ আহলেহাদীছ যুবসংঘ</p>
+            <p class="text-xs text-gray-500">টাঙ্গাইল জেলা শাখা</p>
+        </div>
+
+    </main>
+
+    <footer class="bg-gray-800 text-gray-400 py-4 text-center text-xs">
+        <p>Developed by Universaltech Research & Development</p>
+    </footer>
+
+    <script>
+        function ramadanApp() {
+            return {
+                timeLeft: '00:00:00',
+                nextEventName: '',
+                nextEventTime: '',
+                
+                // Data Strictly from 04.Tangail.jpg
+                schedule: [
+                    { ramadan: 1, date: '2026-02-19', dayBangla: 'বৃহস্পতিবার', sehri: '05:15', iftar: '05:58' },
+                    { ramadan: 2, date: '2026-02-20', dayBangla: 'শুক্রবার', sehri: '05:14', iftar: '05:58' },
+                    { ramadan: 3, date: '2026-02-21', dayBangla: 'শনিবার', sehri: '05:14', iftar: '05:59' },
+                    { ramadan: 4, date: '2026-02-22', dayBangla: 'রবিবার', sehri: '05:13', iftar: '05:59' },
+                    { ramadan: 5, date: '2026-02-23', dayBangla: 'সোমবার', sehri: '05:12', iftar: '06:00' },
+                    { ramadan: 6, date: '2026-02-24', dayBangla: 'মঙ্গলবার', sehri: '05:11', iftar: '06:00' },
+                    { ramadan: 7, date: '2026-02-25', dayBangla: 'বুধবার', sehri: '05:11', iftar: '06:01' },
+                    { ramadan: 8, date: '2026-02-26', dayBangla: 'বৃহস্পতিবার', sehri: '05:10', iftar: '06:01' },
+                    { ramadan: 9, date: '2026-02-27', dayBangla: 'শুক্রবার', sehri: '05:09', iftar: '06:02' },
+                    { ramadan: 10, date: '2026-02-28', dayBangla: 'শনিবার', sehri: '05:08', iftar: '06:03' },
+                    { ramadan: 11, date: '2026-03-01', dayBangla: 'রবিবার', sehri: '05:07', iftar: '06:03' },
+                    { ramadan: 12, date: '2026-03-02', dayBangla: 'সোমবার', sehri: '05:06', iftar: '06:04' },
+                    { ramadan: 13, date: '2026-03-03', dayBangla: 'মঙ্গলবার', sehri: '05:06', iftar: '06:04' },
+                    { ramadan: 14, date: '2026-03-04', dayBangla: 'বুধবার', sehri: '05:06', iftar: '06:05' },
+                    { ramadan: 15, date: '2026-03-05', dayBangla: 'বৃহস্পতিবার', sehri: '05:05', iftar: '06:05' },
+                    { ramadan: 16, date: '2026-03-06', dayBangla: 'শুক্রবার', sehri: '05:03', iftar: '06:06' },
+                    { ramadan: 17, date: '2026-03-07', dayBangla: 'শনিবার', sehri: '05:02', iftar: '06:06' },
+                    { ramadan: 18, date: '2026-03-08', dayBangla: 'রবিবার', sehri: '05:01', iftar: '06:07' },
+                    { ramadan: 19, date: '2026-03-09', dayBangla: 'সোমবার', sehri: '05:00', iftar: '06:07' },
+                    { ramadan: 20, date: '2026-03-10', dayBangla: 'মঙ্গলবার', sehri: '04:59', iftar: '06:08' },
+                    { ramadan: 21, date: '2026-03-11', dayBangla: 'বুধবার', sehri: '04:58', iftar: '06:08' },
+                    { ramadan: 22, date: '2026-03-12', dayBangla: 'বৃহস্পতিবার', sehri: '04:57', iftar: '06:09' },
+                    { ramadan: 23, date: '2026-03-13', dayBangla: 'শুক্রবার', sehri: '04:56', iftar: '06:09' },
+                    { ramadan: 24, date: '2026-03-14', dayBangla: 'শনিবার', sehri: '04:55', iftar: '06:09' },
+                    { ramadan: 25, date: '2026-03-15', dayBangla: 'রবিবার', sehri: '04:54', iftar: '06:10' },
+                    { ramadan: 26, date: '2026-03-16', dayBangla: 'সোমবার', sehri: '04:53', iftar: '06:10' },
+                    { ramadan: 27, date: '2026-03-17', dayBangla: 'মঙ্গলবার', sehri: '04:52', iftar: '06:10' },
+                    { ramadan: 28, date: '2026-03-18', dayBangla: 'বুধবার', sehri: '04:51', iftar: '06:11' },
+                    { ramadan: 29, date: '2026-03-19', dayBangla: 'বৃহস্পতিবার', sehri: '04:50', iftar: '06:11' },
+                    { ramadan: 30, date: '2026-03-20', dayBangla: 'শুক্রবার', sehri: '04:49', iftar: '06:12' }
+                ],
+
+                initApp() {
+                    this.updateTimer();
+                    setInterval(() => this.updateTimer(), 1000);
+                    setTimeout(() => this.scrollToToday(), 500);
+                },
+
+                isToday(dateString) {
+                    const today = new Date().toISOString().split('T')[0];
+                    return dateString === today;
+                },
+
+                formatDate(dateStr) {
+                    const date = new Date(dateStr);
+                    const months = ["Feb", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                    // Showing date in standard format like 19 Feb
+                    return `${date.getDate()} ${date.toLocaleString('default', { month: 'short' })}`;
+                },
+                
+                toBangla(num) {
+                    const banglaDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+                    return num.toString().split('').map(c => banglaDigits[c] || c).join('');
+                },
+
+                scrollToToday() {
+                    const today = new Date().toISOString().split('T')[0];
+                    const el = document.getElementById('day-' + today);
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                },
+
+                updateTimer() {
+                    const now = new Date();
+                    const todayStr = now.toISOString().split('T')[0];
+                    let todaySchedule = this.schedule.find(d => d.date === todayStr);
+                    
+                    if (!todaySchedule) {
+                        // Logic if date is out of range
+                        this.nextEventName = "অপেক্ষা করুন";
+                        this.timeLeft = "--:--:--";
+                        return;
+                    }
+
+                    // Parse Time strings to Date objects
+                    const getTimeDate = (timeStr, isPM = false) => {
+                        const [h, m] = timeStr.split(':').map(Number);
+                        const d = new Date(now);
+                        d.setHours(isPM ? h + 12 : h, m, 0, 0);
+                        return d;
+                    };
+
+                    const sehriTime = getTimeDate(todaySchedule.sehri);
+                    const iftarTime = getTimeDate(todaySchedule.iftar, true); // Iftar is PM
+
+                    let targetTime;
+
+                    if (now < sehriTime) {
+                        targetTime = sehriTime;
+                        this.nextEventName = "সাহারীর শেষ সময়";
+                        this.nextEventTime = todaySchedule.sehri;
+                    } else if (now >= sehriTime && now < iftarTime) {
+                        targetTime = iftarTime;
+                        this.nextEventName = "ইফতারের সময়";
+                        this.nextEventTime = todaySchedule.iftar;
+                    } else {
+                        // Tomorrow Sehri
+                        this.nextEventName = "আগামীকাল সাহারী";
+                        const tomorrowDate = new Date(now);
+                        tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+                        const tStr = tomorrowDate.toISOString().split('T')[0];
+                        const tSch = this.schedule.find(d => d.date === tStr);
+                        
+                        if(tSch) {
+                            const [h, m] = tSch.sehri.split(':').map(Number);
+                            targetTime = new Date(tomorrowDate);
+                            targetTime.setHours(h, m, 0, 0);
+                            this.nextEventTime = tSch.sehri;
+                        } else {
+                            this.nextEventName = "ঈদ মোবারক";
+                            this.timeLeft = "00:00:00";
+                            return;
+                        }
+                    }
+
+                    const diff = targetTime - now;
+                    if (diff > 0) {
+                        const h = Math.floor(diff / 3600000);
+                        const m = Math.floor((diff % 3600000) / 60000);
+                        const s = Math.floor((diff % 60000) / 1000);
+                        this.timeLeft = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                    } else {
+                        this.timeLeft = "00:00:00";
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
