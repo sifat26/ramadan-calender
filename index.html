@@ -1,395 +1,580 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>রমজান ক্যালেন্ডার ২০২৬ - টাঙ্গাইল</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>রমজান ক্যালেন্ডার ২০২৬ - টাঙ্গাইল</title>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Hind Siliguri', 'sans-serif'] },
-                    colors: {
-                        islamic: { 
-                            50: '#f0fdf4',
-                            500: '#22c55e', 
-                            700: '#15803d', 
-                            800: '#166534',
-                            900: '#0f3e23', 
-                            gold: '#fbbf24',
-                            goldLight: '#fde68a'
-                        }
-                    },
-                    animation: {
-                        'swing': 'swing 3s ease-in-out infinite alternate',
-                        'swing-delayed': 'swing 3.5s ease-in-out infinite alternate-reverse',
-                    },
-                    keyframes: {
-                        swing: {
-                            '0%': { transform: 'rotate(5deg)', transformOrigin: 'top center' },
-                            '100%': { transform: 'rotate(-5deg)', transformOrigin: 'top center' },
-                        }
-                    }
-                }
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Hind Siliguri', 'sans-serif'] },
+          colors: {
+            islamic: {
+              50: '#f0fdf4',
+              100:'#dcfce7',
+              200:'#bbf7d0',
+              500: '#22c55e',
+              700: '#15803d',
+              800: '#166534',
+              900: '#0f3e23',
+              gold: '#fbbf24',
+              goldLight: '#fde68a',
             }
-        };
-    </script>
-    <style>
-        [x-cloak] { display: none !important; }
-        body { background-color: #f8fafc; }
-        
-        /* Premium Background Gradient with subtle pattern */
-        .hero-gradient { 
-            background: linear-gradient(135deg, #0f3e23 0%, #15803d 100%);
-            position: relative;
+          },
+          boxShadow: {
+            soft: '0 10px 40px -18px rgba(2, 44, 24, 0.35)',
+          },
+          animation: {
+            'swing': 'swing 3s ease-in-out infinite alternate',
+            'swing-delayed': 'swing 3.5s ease-in-out infinite alternate-reverse',
+          },
+          keyframes: {
+            swing: {
+              '0%': { transform: 'rotate(4deg)', transformOrigin: 'top center' },
+              '100%': { transform: 'rotate(-4deg)', transformOrigin: 'top center' },
+            }
+          }
         }
-        
-        /* Soft glassmorphism for cards */
-        .timer-card { 
-            background: rgba(255, 255, 255, 0.95); 
-            backdrop-filter: blur(12px); 
-            border: 1px solid rgba(255, 255, 255, 0.8); 
-            box-shadow: 0 10px 40px -10px rgba(21, 128, 61, 0.15);
-        }
-        
-        /* Custom scrollbar for the table */
-        .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        
-        html { scroll-behavior: smooth; }
-    </style>
+      }
+    };
+  </script>
+
+  <style>
+    [x-cloak] { display: none !important; }
+
+    :root{
+      --bg: #f8fafc;          /* slate-50-ish */
+      --card: rgba(255,255,255,0.92);
+      --text: #0f172a;        /* slate-900 */
+      --muted: #475569;       /* slate-600 */
+      --line: #e2e8f0;        /* slate-200 */
+    }
+
+    body { background: var(--bg); color: var(--text); }
+    html { scroll-behavior: smooth; }
+
+    /* Hero: depth + glow + vignette */
+    .hero-gradient {
+      background: radial-gradient(900px 400px at 50% 0%, rgba(253,230,138,0.14), transparent 60%),
+                  linear-gradient(135deg, #0f3e23 0%, #15803d 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-vignette{
+      position:absolute; inset:0;
+      background: radial-gradient(circle at 50% 10%, transparent 35%, rgba(0,0,0,0.22) 100%);
+      pointer-events:none;
+    }
+    .hero-pattern{
+      position:absolute; inset:0;
+      opacity:0.08;
+      pointer-events:none;
+    }
+
+    /* Glass card + better border */
+    .timer-card {
+      background: var(--card);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.75);
+      box-shadow: 0 12px 50px -18px rgba(21, 128, 61, 0.26);
+    }
+
+    /* Custom scrollbar */
+    .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    /* Accessibility: focus visible rings */
+    a:focus-visible, button:focus-visible {
+      outline: 3px solid rgba(251,191,36,0.6);
+      outline-offset: 2px;
+      border-radius: 9999px;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .animate-swing, .animate-swing-delayed, .animate-pulse { animation: none !important; }
+      * { transition: none !important; }
+    }
+  </style>
 </head>
-<body class="text-gray-800 font-sans min-h-screen flex flex-col" x-data="ramadanApp()" x-init="initApp()">
 
-    <header class="hero-gradient text-white pt-12 pb-32 px-4 text-center relative shadow-2xl overflow-hidden">
-        
-        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M30 0l15 30-15 30L15 30z\' fill=\'%23ffffff\' fill-opacity=\'1\' fill-rule=\'evenodd\'/%3E%3C/svg%3E');"></div>
+<body class="font-sans min-h-screen flex flex-col" x-data="ramadanApp()" x-init="initApp()">
 
-        <div class="relative z-10 flex flex-col items-center">
-            <div class="inline-flex items-center px-4 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md text-islamic-goldLight text-xs md:text-sm mb-6 tracking-widest uppercase shadow-sm">
-                <i class="fas fa-moon mr-2"></i> Ramadan Kareem 2026
-            </div>
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-3 drop-shadow-lg text-white">তোহফায়ে রামাযান</h1>
-            <p class="text-base md:text-xl opacity-90 flex items-center justify-center font-medium bg-black/20 px-4 py-1 rounded-full">
-                <i class="fas fa-location-dot mr-2 text-islamic-gold"></i> টাঙ্গাইল জেলা
-            </p>
-        </div>
+  <!-- Skip link for keyboard users -->
+  <a href="#schedule" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 bg-white text-slate-900 px-4 py-2 rounded-full shadow">
+    মূল কনটেন্টে যান
+  </a>
 
-        <svg class="absolute bottom-0 left-0 w-full h-auto text-[#f8fafc]" viewBox="0 0 1440 120" fill="currentColor" preserveAspectRatio="none">
-            <path d="M0,120 L1440,120 L1440,80 Q1380,80 1350,50 Q1320,80 1260,80 L1100,80 Q1070,80 1040,40 Q1010,80 980,80 L800,80 Q760,80 730,20 Q700,80 660,80 L500,80 Q470,80 440,50 Q410,80 350,80 L180,80 Q150,80 120,40 Q90,80 50,80 L0,80 Z"></path>
-            <path d="M730,25 Q745,50 730,75 Q715,50 730,25" fill="#e2e8f0" opacity="0.5"></path>
-            <path d="M1040,45 Q1050,60 1040,75 Q1030,60 1040,45" fill="#e2e8f0" opacity="0.5"></path>
-            <path d="M120,45 Q130,60 120,75 Q110,60 120,45" fill="#e2e8f0" opacity="0.5"></path>
+  <header class="hero-gradient text-white pt-12 pb-28 px-4 text-center relative shadow-2xl">
+    <div class="hero-pattern" style="background-image: url('data:image/svg+xml,%3Csvg width=%2760%27 height=%2760%27 viewBox=%270 0 60 60%27 xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cpath d=%27M30 0l15 30-15 30L15 30z%27 fill=%23ffffff fill-opacity=%271%27 fill-rule=%27evenodd%27/%3E%3C/svg%3E');"></div>
+    <div class="hero-vignette"></div>
+
+    <div class="relative z-10 max-w-4xl mx-auto">
+      <div class="inline-flex items-center px-4 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md text-islamic-goldLight text-xs md:text-sm mb-6 tracking-widest uppercase shadow-sm">
+        <i class="fas fa-moon mr-2" aria-hidden="true"></i> Ramadan Kareem 2026
+      </div>
+
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-3 drop-shadow-lg tracking-tight leading-[1.05]">
+        তোহফায়ে রামাযান
+      </h1>
+
+      <p class="text-sm md:text-lg opacity-95 inline-flex items-center justify-center font-semibold bg-black/20 px-4 py-2 rounded-full">
+        <i class="fas fa-location-dot mr-2 text-islamic-gold" aria-hidden="true"></i>
+        টাঙ্গাইল জেলা
+      </p>
+
+      <p class="mt-5 text-white/80 text-sm md:text-base leading-relaxed">
+        সাহরীর শেষ ও ইফতারের সময়সূচী
+      </p>
+    </div>
+
+    <svg class="absolute bottom-0 left-0 w-full h-auto text-[#f8fafc]" viewBox="0 0 1440 120" fill="currentColor" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,120 L1440,120 L1440,80 Q1380,80 1350,50 Q1320,80 1260,80 L1100,80 Q1070,80 1040,40 Q1010,80 980,80 L800,80 Q760,80 730,20 Q700,80 660,80 L500,80 Q470,80 440,50 Q410,80 350,80 L180,80 Q150,80 120,40 Q90,80 50,80 L0,80 Z"></path>
+    </svg>
+  </header>
+
+  <main class="container mx-auto px-4 -mt-20 relative z-20 pb-12 max-w-5xl flex-grow">
+
+    <!-- Timer Card -->
+    <section class="timer-card rounded-[1.75rem] p-6 md:p-10 text-center mb-8 border-b-[6px] border-islamic-gold relative">
+
+      <div class="absolute -top-10 left-6 md:left-12 animate-swing hidden sm:block" aria-hidden="true">
+        <svg width="40" height="100" viewBox="0 0 40 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="20" y1="0" x2="20" y2="40" stroke="#fbbf24" stroke-width="2"/>
+          <path d="M10 40H30L35 70H5L10 40Z" fill="#15803d"/>
+          <path d="M5 70H35V75H5V70Z" fill="#fbbf24"/>
+          <path d="M15 75L20 90L25 75H15Z" fill="#166534"/>
+          <circle cx="20" cy="55" r="5" fill="#fde68a" class="animate-pulse"/>
         </svg>
-    </header>
+      </div>
 
-    <main class="container mx-auto px-4 -mt-24 relative z-20 pb-12 max-w-4xl flex-grow">
-        
-        <div class="timer-card rounded-[2rem] p-6 md:p-10 text-center mb-10 border-b-[6px] border-islamic-gold relative">
-            
-            <div class="absolute -top-12 left-6 md:left-12 animate-swing hidden sm:block">
-                <svg width="40" height="100" viewBox="0 0 40 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <line x1="20" y1="0" x2="20" y2="40" stroke="#fbbf24" stroke-width="2"/>
-                    <path d="M10 40H30L35 70H5L10 40Z" fill="#15803d"/>
-                    <path d="M5 70H35V75H5V70Z" fill="#fbbf24"/>
-                    <path d="M15 75L20 90L25 75H15Z" fill="#166534"/>
-                    <circle cx="20" cy="55" r="5" fill="#fde68a" class="animate-pulse"/>
-                </svg>
-            </div>
-            <div class="absolute -top-8 right-6 md:right-12 animate-swing-delayed hidden sm:block">
-                <svg width="30" height="80" viewBox="0 0 40 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <line x1="20" y1="0" x2="20" y2="40" stroke="#fbbf24" stroke-width="2"/>
-                    <path d="M10 40H30L35 70H5L10 40Z" fill="#166534"/>
-                    <path d="M5 70H35V75H5V70Z" fill="#fbbf24"/>
-                    <path d="M15 75L20 90L25 75H15Z" fill="#15803d"/>
-                    <circle cx="20" cy="55" r="5" fill="#fde68a" class="animate-pulse"/>
-                </svg>
-            </div>
+      <div class="absolute -top-7 right-6 md:right-12 animate-swing-delayed hidden sm:block" aria-hidden="true">
+        <svg width="30" height="80" viewBox="0 0 40 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="20" y1="0" x2="20" y2="40" stroke="#fbbf24" stroke-width="2"/>
+          <path d="M10 40H30L35 70H5L10 40Z" fill="#166534"/>
+          <path d="M5 70H35V75H5V70Z" fill="#fbbf24"/>
+          <path d="M15 75L20 90L25 75H15Z" fill="#15803d"/>
+          <circle cx="20" cy="55" r="5" fill="#fde68a" class="animate-pulse"/>
+        </svg>
+      </div>
 
-            <h2 class="text-lg md:text-xl font-semibold text-gray-500 mb-4" x-text="nextEventLabel">পরবর্তী ইভেন্ট</h2>
-            
-            <div class="flex justify-center items-center gap-3 md:gap-6 my-6">
-                <template x-for="(unit, index) in timeLeftArray" :key="index">
-                    <div class="flex flex-col items-center">
-                        <div class="bg-gradient-to-b from-islamic-800 to-islamic-900 text-white w-20 h-20 md:w-28 md:h-28 rounded-2xl flex items-center justify-center text-4xl md:text-6xl font-bold shadow-xl shadow-green-900/30 border border-islamic-700/50" x-text="unit.value"></div>
-                        <span class="text-xs md:text-sm mt-3 text-gray-500 font-bold tracking-wider" x-text="unit.label"></span>
-                    </div>
-                </template>
-            </div>
+      <h2 class="text-sm md:text-base font-semibold text-slate-600 tracking-wide" x-text="nextEventLabel"></h2>
 
-            <div class="inline-flex items-center px-6 py-3 md:px-8 md:py-4 bg-islamic-50 text-islamic-900 rounded-full font-bold border border-islamic-200 shadow-sm mt-2 text-sm md:text-base">
-                <i class="fas fa-clock mr-3 text-islamic-500 animate-pulse"></i>
-                <span x-text="nextEventName">লোড হচ্ছে...</span>
-                <span class="mx-3 text-gray-300">|</span>
-                <span x-text="nextEventTime ? convertToBanglaTime(nextEventTime) : ''"></span>
-            </div>
+      <div class="flex justify-center items-center gap-3 md:gap-6 my-6" aria-live="polite">
+        <template x-for="(unit, index) in timeLeftArray" :key="index">
+          <div class="flex flex-col items-center">
+            <div class="bg-gradient-to-b from-islamic-800 to-islamic-900 text-white w-20 h-20 md:w-28 md:h-28 rounded-2xl flex items-center justify-center text-4xl md:text-6xl font-bold shadow-soft border border-islamic-700/40"
+                 x-text="unit.value"></div>
+            <span class="text-[11px] md:text-sm mt-3 text-slate-600 font-bold tracking-wider" x-text="unit.label"></span>
+          </div>
+        </template>
+      </div>
+
+      <div class="inline-flex items-center px-6 py-3 md:px-8 md:py-4 bg-islamic-50 text-islamic-900 rounded-full font-bold border border-islamic-200 shadow-sm mt-1 text-sm md:text-base">
+        <i class="fas fa-clock mr-3 text-islamic-700 animate-pulse" aria-hidden="true"></i>
+        <span x-text="nextEventName">লোড হচ্ছে...</span>
+        <span class="mx-3 text-slate-300" aria-hidden="true">|</span>
+        <span x-text="nextEventTime ? convertToBanglaTime(nextEventTime) : ''"></span>
+      </div>
+
+      <!-- Today quick card -->
+      <div class="mt-6 mx-auto max-w-xl text-left bg-white/70 border border-slate-200 rounded-2xl p-4 md:p-5">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <div class="text-xs md:text-sm text-slate-600 font-semibold">আজকের সময়সূচী</div>
+            <div class="text-slate-900 font-extrabold text-lg md:text-xl leading-tight" x-text="todayTitle"></div>
+          </div>
+          <button @click="scrollToToday()"
+                  class="shrink-0 inline-flex items-center justify-center bg-islamic-700 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-islamic-800 active:scale-95 transition shadow-md">
+            <i class="fas fa-crosshairs mr-2" aria-hidden="true"></i> আজকের দিন
+          </button>
         </div>
+        <div class="mt-3 grid grid-cols-2 gap-3 text-sm">
+          <div class="rounded-xl border border-slate-200 bg-white px-3 py-2">
+            <div class="text-xs text-slate-600 font-semibold">সাহরীর শেষ</div>
+            <div class="font-extrabold text-slate-900" x-text="todaySehriBangla"></div>
+          </div>
+          <div class="rounded-xl border border-slate-200 bg-white px-3 py-2">
+            <div class="text-xs text-slate-600 font-semibold">ইফতার</div>
+            <div class="font-extrabold text-slate-900" x-text="todayIftarBangla"></div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        <div class="bg-white rounded-[2rem] shadow-xl overflow-hidden border border-gray-100">
-            <div class="bg-gray-50/80 px-4 md:px-8 py-5 border-b flex flex-col sm:flex-row justify-between items-center gap-4">
-                <h3 class="font-bold text-xl md:text-2xl text-islamic-900 flex items-center">
-                    <svg class="w-6 h-6 mr-3 text-islamic-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    পূর্ণাঙ্গ সময়সূচী
-                </h3>
-                <button @click="scrollToToday()" class="w-full sm:w-auto bg-islamic-700 text-white px-6 py-2.5 rounded-full text-sm md:text-base font-semibold hover:bg-islamic-800 transition-all shadow-md flex items-center justify-center">
-                    <i class="fas fa-crosshairs mr-2"></i> আজকের দিন
-                </button>
+    <!-- Schedule -->
+    <section id="schedule" class="bg-white rounded-[1.75rem] shadow-xl overflow-hidden border border-slate-100">
+
+      <div class="bg-slate-50/80 px-4 md:px-8 py-5 border-b flex flex-col sm:flex-row justify-between items-center gap-3">
+        <h3 class="font-extrabold text-xl md:text-2xl text-islamic-900 flex items-center tracking-tight">
+          <svg class="w-6 h-6 mr-3 text-islamic-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+            </path>
+          </svg>
+          পূর্ণাঙ্গ সময়সূচী
+        </h3>
+
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <button @click="scrollToToday()"
+                  class="w-full sm:w-auto inline-flex items-center justify-center bg-islamic-700 text-white px-6 py-2.5 rounded-full text-sm md:text-base font-semibold hover:bg-islamic-800 active:scale-95 transition shadow-md">
+            <i class="fas fa-location-crosshairs mr-2" aria-hidden="true"></i> আজকের দিন
+          </button>
+        </div>
+      </div>
+
+      <!-- MOBILE: Card view ALWAYS -->
+      <div class="block sm:hidden p-4 space-y-3">
+        <template x-for="day in schedule" :key="day.ramadan">
+          <article
+            :id="'day-' + day.date"
+            class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden transition
+                   hover:shadow-md"
+            :class="isToday(day.date) ? 'ring-2 ring-islamic-500/40 border-islamic-200 bg-islamic-50/40' : ''"
+          >
+            <div class="p-4">
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-full flex items-center justify-center font-extrabold
+                              bg-slate-100 text-slate-700"
+                       :class="isToday(day.date) ? 'bg-islamic-700 text-white' : ''"
+                       x-text="toBangla(day.ramadan)"></div>
+
+                  <div>
+                    <div class="font-extrabold text-slate-900 leading-tight" x-text="formatDate(day.date)"></div>
+                    <div class="text-xs text-slate-600 font-semibold mt-0.5" x-text="day.dayBangla"></div>
+                  </div>
+                </div>
+
+                <span x-show="isToday(day.date)"
+                      class="shrink-0 inline-flex items-center px-2.5 py-1 rounded-full text-xs font-extrabold
+                             bg-islamic-700 text-white">
+                  আজ
+                </span>
+              </div>
+
+              <div class="mt-4 grid grid-cols-2 gap-3 text-sm">
+                <div class="rounded-xl border border-red-100 bg-red-50/60 px-3 py-2">
+                  <div class="text-xs text-red-700 font-semibold">সাহরীর শেষ</div>
+                  <div class="font-extrabold text-red-700" x-text="convertToBanglaTime(day.sehri)"></div>
+                </div>
+                <div class="rounded-xl border border-green-100 bg-green-50/70 px-3 py-2">
+                  <div class="text-xs text-islamic-800 font-semibold">ইফতার</div>
+                  <div class="font-extrabold text-islamic-800" x-text="convertToBanglaTime(day.iftar)"></div>
+                </div>
+              </div>
             </div>
-            
-            <div class="overflow-x-auto custom-scrollbar">
-                <table class="w-full text-left min-w-[500px]">
-                    <thead>
-                        <tr class="bg-islamic-900 text-islamic-50 text-xs md:text-sm uppercase tracking-wider">
-                            <th class="px-4 py-4 md:px-6 font-medium rounded-tl-lg">রমজান</th>
-                            <th class="px-4 py-4 md:px-6 font-medium">তারিখ ও বার</th>
-                            <th class="px-4 py-4 md:px-6 font-medium text-center">সাহরীর শেষ</th>
-                            <th class="px-4 py-4 md:px-6 font-medium text-center rounded-tr-lg">ইফতার</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100 text-sm md:text-base">
-                        <template x-for="day in schedule" :key="day.ramadan">
-                            <tr :id="'day-' + day.date" 
-                                class="transition-colors hover:bg-gray-50"
-                                :class="isToday(day.date) ? 'bg-green-50/60 ring-inset ring-2 ring-islamic-500/30 relative' : ''">
-                                
-                                <td class="px-4 md:px-6 py-4">
-                                    <div class="flex items-center">
-                                        <div x-show="isToday(day.date)" class="absolute left-0 top-0 bottom-0 w-1.5 bg-islamic-500 rounded-r-md"></div>
-                                        <span class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center font-bold text-gray-600 bg-gray-100/80" 
-                                              :class="isToday(day.date) ? 'bg-islamic-700 text-white shadow-md' : ''"
-                                              x-text="toBangla(day.ramadan)"></span>
-                                    </div>
-                                </td>
-                                
-                                <td class="px-4 md:px-6 py-4">
-                                    <div class="font-bold text-gray-800" x-text="formatDate(day.date)"></div>
-                                    <div class="text-xs text-gray-500 mt-0.5" x-text="day.dayBangla"></div>
-                                </td>
-                                
-                                <td class="px-4 md:px-6 py-4 text-center">
-                                    <span class="inline-block px-3 py-1 bg-red-50 text-red-600 font-bold rounded-md" x-text="convertToBanglaTime(day.sehri)"></span>
-                                </td>
-                                
-                                <td class="px-4 md:px-6 py-4 text-center">
-                                    <span class="inline-block px-3 py-1 bg-green-50 text-islamic-700 font-bold rounded-md" x-text="convertToBanglaTime(day.iftar)"></span>
-                                </td>
-                            </tr>
-                        </template>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </main>
+          </article>
+        </template>
+      </div>
 
-    <footer class="bg-islamic-900 text-gray-400 pt-12 pb-8 px-4 text-center relative overflow-hidden">
-        <div class="absolute inset-x-0 bottom-0 opacity-5 pointer-events-none">
-            <svg viewBox="0 0 1440 320" class="w-full h-auto" fill="#ffffff"><path fill-opacity="1" d="M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,250.7C1248,256,1344,288,1392,304L1440,320L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>
-        </div>
-        
-        <div class="relative z-10">
-            <p class="mb-4 text-sm md:text-base">Developed with <i class="fas fa-heart text-red-500 mx-1"></i> by <span class="text-islamic-gold font-bold">Tanvir Ahmmed Sifat</span></p>
-            <div class="flex justify-center gap-5 text-2xl mb-6">
-    <a href="https://www.facebook.com/sifat.7847/" target="_blank" class="hover:text-white hover:-translate-y-1 transform transition-all">
-        <i class="fab fa-facebook"></i>
-    </a>
-    
-    <a href="https://www.linkedin.com/in/sifat26" target="_blank" class="hover:text-white hover:-translate-y-1 transform transition-all">
-        <i class="fab fa-linkedin"></i>
-    </a>
-    
-    <a href="https://github.com/sifat26" target="_blank" class="hover:text-white hover:-translate-y-1 transform transition-all">
-        <i class="fab fa-github"></i>
-    </a>
-</div>
-            <!--<p class="text-xs opacity-40 font-light">© 2026 • তথ্যসূত্র: ইসলামিক ফাউন্ডেশন বাংলাদেশ (টাঙ্গাইল সময়সূচী অনুযায়ী)</p>-->
-        </div>
-    </footer>
+      <!-- DESKTOP/TABLE: show from sm+ -->
+      <div class="hidden sm:block overflow-x-auto custom-scrollbar">
+        <table class="w-full text-left min-w-[620px]">
+          <caption class="sr-only">রমজান সময়সূচী টেবিল — সাহরীর শেষ এবং ইফতার সময়</caption>
 
-    <script>
-        function ramadanApp() {
-            return {
-                timeLeftArray: [
-                    { value: '০০', label: 'ঘণ্টা' },
-                    { value: '০০', label: 'মিনিট' },
-                    { value: '০০', label: 'সেকেন্ড' }
-                ],
-                nextEventName: '',
-                nextEventTime: '',
-                nextEventLabel: 'পরবর্তী সময় বাকি',
-                
-                schedule: [
-                    { ramadan: 1, date: '2026-02-19', dayBangla: 'বৃহস্পতিবার', sehri: '05:15', iftar: '05:58' },
-                    { ramadan: 2, date: '2026-02-20', dayBangla: 'শুক্রবার', sehri: '05:14', iftar: '05:58' },
-                    { ramadan: 3, date: '2026-02-21', dayBangla: 'শনিবার', sehri: '05:14', iftar: '05:59' },
-                    { ramadan: 4, date: '2026-02-22', dayBangla: 'রবিবার', sehri: '05:13', iftar: '05:59' },
-                    { ramadan: 5, date: '2026-02-23', dayBangla: 'সোমবার', sehri: '05:12', iftar: '06:00' },
-                    { ramadan: 6, date: '2026-02-24', dayBangla: 'মঙ্গলবার', sehri: '05:11', iftar: '06:00' },
-                    { ramadan: 7, date: '2026-02-25', dayBangla: 'বুধবার', sehri: '05:11', iftar: '06:01' },
-                    { ramadan: 8, date: '2026-02-26', dayBangla: 'বৃহস্পতিবার', sehri: '05:10', iftar: '06:01' },
-                    { ramadan: 9, date: '2026-02-27', dayBangla: 'শুক্রবার', sehri: '05:09', iftar: '06:02' },
-                    { ramadan: 10, date: '2026-02-28', dayBangla: 'শনিবার', sehri: '05:08', iftar: '06:03' },
-                    { ramadan: 11, date: '2026-03-01', dayBangla: 'রবিবার', sehri: '05:07', iftar: '06:03' },
-                    { ramadan: 12, date: '2026-03-02', dayBangla: 'সোমবার', sehri: '05:06', iftar: '06:04' },
-                    { ramadan: 13, date: '2026-03-03', dayBangla: 'মঙ্গলবার', sehri: '05:06', iftar: '06:04' },
-                    { ramadan: 14, date: '2026-03-04', dayBangla: 'বুধবার', sehri: '05:06', iftar: '06:05' },
-                    { ramadan: 15, date: '2026-03-05', dayBangla: 'বৃহস্পতিবার', sehri: '05:05', iftar: '06:05' },
-                    { ramadan: 16, date: '2026-03-06', dayBangla: 'শুক্রবার', sehri: '05:03', iftar: '06:06' },
-                    { ramadan: 17, date: '2026-03-07', dayBangla: 'শনিবার', sehri: '05:02', iftar: '06:06' },
-                    { ramadan: 18, date: '2026-03-08', dayBangla: 'রবিবার', sehri: '05:01', iftar: '06:07' },
-                    { ramadan: 19, date: '2026-03-09', dayBangla: 'সোমবার', sehri: '05:00', iftar: '06:07' },
-                    { ramadan: 20, date: '2026-03-10', dayBangla: 'মঙ্গলবার', sehri: '04:59', iftar: '06:08' },
-                    { ramadan: 21, date: '2026-03-11', dayBangla: 'বুধবার', sehri: '04:58', iftar: '06:08' },
-                    { ramadan: 22, date: '2026-03-12', dayBangla: 'বৃহস্পতিবার', sehri: '04:57', iftar: '06:09' },
-                    { ramadan: 23, date: '2026-03-13', dayBangla: 'শুক্রবার', sehri: '04:56', iftar: '06:09' },
-                    { ramadan: 24, date: '2026-03-14', dayBangla: 'শনিবার', sehri: '04:55', iftar: '06:09' },
-                    { ramadan: 25, date: '2026-03-15', dayBangla: 'রবিবার', sehri: '04:54', iftar: '06:10' },
-                    { ramadan: 26, date: '2026-03-16', dayBangla: 'সোমবার', sehri: '04:53', iftar: '06:10' },
-                    { ramadan: 27, date: '2026-03-17', dayBangla: 'মঙ্গলবার', sehri: '04:52', iftar: '06:10' },
-                    { ramadan: 28, date: '2026-03-18', dayBangla: 'বুধবার', sehri: '04:51', iftar: '06:11' },
-                    { ramadan: 29, date: '2026-03-19', dayBangla: 'বৃহস্পতিবার', sehri: '04:50', iftar: '06:11' },
-                    { ramadan: 30, date: '2026-03-20', dayBangla: 'শুক্রবার', sehri: '04:49', iftar: '06:12' }
-                ],
+          <thead class="sticky top-0 z-10">
+            <tr class="bg-islamic-900 text-islamic-50 text-xs md:text-sm uppercase tracking-wider">
+              <th scope="col" class="px-6 py-4 font-semibold rounded-tl-lg">রমজান</th>
+              <th scope="col" class="px-6 py-4 font-semibold">তারিখ ও বার</th>
+              <th scope="col" class="px-6 py-4 font-semibold text-center">সাহরীর শেষ</th>
+              <th scope="col" class="px-6 py-4 font-semibold text-center rounded-tr-lg">ইফতার</th>
+            </tr>
+          </thead>
 
-                initApp() {
-                    this.updateTimer();
-                    setInterval(() => this.updateTimer(), 1000);
-                    // Slightly longer timeout to ensure DOM is fully rendered before scrolling
-                    setTimeout(() => this.scrollToToday(), 1000);
-                },
+          <tbody class="divide-y divide-slate-100 text-sm md:text-base">
+            <template x-for="(day, idx) in schedule" :key="day.ramadan">
+              <tr :id="'day-' + day.date"
+                  class="transition-colors hover:bg-slate-50/70"
+                  :class="[
+                    idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/40',
+                    isToday(day.date) ? 'bg-islamic-50/60 ring-inset ring-2 ring-islamic-500/25 relative' : ''
+                  ].join(' ')">
 
-                getLocalDateString() {
-                    const now = new Date();
-                    const offset = now.getTimezoneOffset();
-                    const localDate = new Date(now.getTime() - (offset * 60 * 1000));
-                    return localDate.toISOString().split('T')[0];
-                },
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <div x-show="isToday(day.date)" class="absolute left-0 top-0 bottom-0 w-1.5 bg-islamic-500 rounded-r-md" aria-hidden="true"></div>
+                    <span class="w-10 h-10 rounded-full flex items-center justify-center font-extrabold text-slate-700 bg-slate-100"
+                          :class="isToday(day.date) ? 'bg-islamic-700 text-white shadow-md' : ''"
+                          x-text="toBangla(day.ramadan)"></span>
+                    <span x-show="isToday(day.date)" class="text-xs font-extrabold text-islamic-800 bg-islamic-100 px-2 py-1 rounded-full">
+                      আজ
+                    </span>
+                  </div>
+                </td>
 
-                isToday(dateString) {
-                    return dateString === this.getLocalDateString();
-                },
+                <td class="px-6 py-4">
+                  <div class="font-extrabold text-slate-900" x-text="formatDate(day.date)"></div>
+                  <div class="text-xs text-slate-600 font-semibold mt-0.5" x-text="day.dayBangla"></div>
+                </td>
 
-                formatDate(dateStr) {
-                    const date = new Date(dateStr);
-                    const months = ["জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল"];
-                    return this.toBangla(date.getDate()) + ' ' + months[date.getMonth()];
-                },
-                
-                toBangla(num) {
-                    if(num === undefined || num === null) return '';
-                    const banglaDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
-                    return num.toString().split('').map(c => banglaDigits[c] || c).join('');
-                },
+                <td class="px-6 py-4 text-center">
+                  <span class="inline-flex items-center justify-center px-3 py-1 rounded-lg font-extrabold
+                               bg-red-50 text-red-700 border border-red-100">
+                    <i class="fa-solid fa-sun mr-2 text-[12px]" aria-hidden="true"></i>
+                    <span x-text="convertToBanglaTime(day.sehri)"></span>
+                  </span>
+                </td>
 
-                convertToBanglaTime(timeStr) {
-                    if(!timeStr) return '';
-                    return timeStr.split('').map(c => {
-                        if(c === ':') return ':';
-                        return this.toBangla(c);
-                    }).join('');
-                },
+                <td class="px-6 py-4 text-center">
+                  <span class="inline-flex items-center justify-center px-3 py-1 rounded-lg font-extrabold
+                               bg-green-50 text-islamic-800 border border-green-100">
+                    <i class="fa-solid fa-mug-hot mr-2 text-[12px]" aria-hidden="true"></i>
+                    <span x-text="convertToBanglaTime(day.iftar)"></span>
+                  </span>
+                </td>
 
-                scrollToToday() {
-                    const today = this.getLocalDateString();
-                    const el = document.getElementById('day-' + today);
-                    if (el) {
-                        // Offset the scroll position so it doesn't hide behind a sticky header (if you ever add one)
-                        const yOffset = -20; 
-                        const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-                        window.scrollTo({top: y, behavior: 'smooth'});
-                    }
-                },
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
 
-                updateTimer() {
-                    const now = new Date();
-                    const todayStr = this.getLocalDateString();
-                    let todayData = this.schedule.find(d => d.date === todayStr);
+  <footer class="bg-islamic-900 text-slate-300 pt-12 pb-8 px-4 text-center relative overflow-hidden">
+    <div class="absolute inset-x-0 bottom-0 opacity-5 pointer-events-none" aria-hidden="true">
+      <svg viewBox="0 0 1440 320" class="w-full h-auto" fill="#ffffff">
+        <path fill-opacity="1" d="M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,250.7C1248,256,1344,288,1392,304L1440,320L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+      </svg>
+    </div>
 
-                    const createDate = (baseDateStr, timeStr, isPM) => {
-                        const d = new Date(baseDateStr + 'T00:00:00');
-                        const [h, m] = timeStr.split(':').map(Number);
-                        let hours = h;
-                        if (isPM && h < 12) hours += 12; 
-                        d.setHours(hours, m, 0, 0);
-                        return d;
-                    };
+    <div class="relative z-10 max-w-4xl mx-auto">
+      <p class="mb-4 text-sm md:text-base leading-relaxed">
+        Developed with <i class="fas fa-heart text-red-400 mx-1" aria-hidden="true"></i>
+        by <span class="text-islamic-gold font-extrabold">Tanvir Ahmmed Sifat</span>
+      </p>
 
-                    let targetDate;
-                    
-                    if (todayData) {
-                        const sehriTime = createDate(todayStr, todayData.sehri, false); 
-                        const iftarTime = createDate(todayStr, todayData.iftar, true);  
+      <div class="flex justify-center gap-5 text-2xl mb-6">
+        <a href="https://www.facebook.com/sifat.7847/" target="_blank" rel="noopener"
+           class="hover:text-white hover:-translate-y-0.5 active:scale-95 transform transition-all"
+           aria-label="Facebook profile (opens in new tab)">
+          <i class="fab fa-facebook" aria-hidden="true"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/sifat26" target="_blank" rel="noopener"
+           class="hover:text-white hover:-translate-y-0.5 active:scale-95 transform transition-all"
+           aria-label="LinkedIn profile (opens in new tab)">
+          <i class="fab fa-linkedin" aria-hidden="true"></i>
+        </a>
+        <a href="https://github.com/sifat26" target="_blank" rel="noopener"
+           class="hover:text-white hover:-translate-y-0.5 active:scale-95 transform transition-all"
+           aria-label="GitHub profile (opens in new tab)">
+          <i class="fab fa-github" aria-hidden="true"></i>
+        </a>
+      </div>
 
-                        if (now < sehriTime) {
-                            targetDate = sehriTime;
-                            this.nextEventName = "সাহরীর শেষ সময়";
-                            this.nextEventLabel = "সাহরীর সময় বাকি";
-                            this.nextEventTime = todayData.sehri;
-                        } else if (now >= sehriTime && now < iftarTime) {
-                            targetDate = iftarTime;
-                            this.nextEventName = "ইফতারের সময়";
-                            this.nextEventLabel = "ইফতারের সময় বাকি";
-                            this.nextEventTime = todayData.iftar;
-                        } else {
-                            this.setTomorrowSehri(now);
-                            return; 
-                        }
-                    } else {
-                        const futureDates = this.schedule.filter(d => new Date(d.date) > new Date(todayStr));
-                        if(futureDates.length > 0) {
-                             const nextDay = futureDates[0];
-                             targetDate = createDate(nextDay.date, nextDay.sehri, false);
-                             this.nextEventName = "প্রথম রোজা (সাহরী)";
-                             this.nextEventTime = nextDay.sehri;
-                             this.nextEventLabel = "রমজান শুরু হতে বাকি";
-                        }
-                    }
+      <p class="text-xs text-slate-400/80">
+        © 2026 • সময়গুলো স্থানীয়ভাবে ১–২ মিনিট ভিন্ন হতে পারে
+      </p>
+    </div>
+  </footer>
 
-                    if(targetDate) this.calculateDiff(targetDate);
-                },
+  <script>
+    function ramadanApp() {
+      return {
+        timeLeftArray: [
+          { value: '০০', label: 'ঘণ্টা' },
+          { value: '০০', label: 'মিনিট' },
+          { value: '০০', label: 'সেকেন্ড' }
+        ],
+        nextEventName: '',
+        nextEventTime: '',
+        nextEventLabel: 'পরবর্তী সময় বাকি',
 
-                setTomorrowSehri(now) {
-                    const tomorrow = new Date(now);
-                    tomorrow.setDate(tomorrow.getDate() + 1);
-                    const tomorrowStr = tomorrow.toISOString().split('T')[0];
-                    const tData = this.schedule.find(d => d.date === tomorrowStr);
+        todayTitle: '',
+        todaySehriBangla: '',
+        todayIftarBangla: '',
 
-                    if (tData) {
-                        const [h, m] = tData.sehri.split(':').map(Number);
-                        const tDate = new Date(tomorrowStr + 'T00:00:00');
-                        tDate.setHours(h, m, 0, 0);
-                        this.calculateDiff(tDate);
-                        this.nextEventName = "আগামীকাল সাহরী";
-                        this.nextEventTime = tData.sehri;
-                        this.nextEventLabel = "সাহরীর সময় বাকি";
-                    }
-                },
+        schedule: [
+          { ramadan: 1, date: '2026-02-19', dayBangla: 'বৃহস্পতিবার', sehri: '05:15', iftar: '05:58' },
+          { ramadan: 2, date: '2026-02-20', dayBangla: 'শুক্রবার', sehri: '05:14', iftar: '05:58' },
+          { ramadan: 3, date: '2026-02-21', dayBangla: 'শনিবার', sehri: '05:14', iftar: '05:59' },
+          { ramadan: 4, date: '2026-02-22', dayBangla: 'রবিবার', sehri: '05:13', iftar: '05:59' },
+          { ramadan: 5, date: '2026-02-23', dayBangla: 'সোমবার', sehri: '05:12', iftar: '06:00' },
+          { ramadan: 6, date: '2026-02-24', dayBangla: 'মঙ্গলবার', sehri: '05:11', iftar: '06:00' },
+          { ramadan: 7, date: '2026-02-25', dayBangla: 'বুধবার', sehri: '05:11', iftar: '06:01' },
+          { ramadan: 8, date: '2026-02-26', dayBangla: 'বৃহস্পতিবার', sehri: '05:10', iftar: '06:01' },
+          { ramadan: 9, date: '2026-02-27', dayBangla: 'শুক্রবার', sehri: '05:09', iftar: '06:02' },
+          { ramadan: 10, date: '2026-02-28', dayBangla: 'শনিবার', sehri: '05:08', iftar: '06:03' },
+          { ramadan: 11, date: '2026-03-01', dayBangla: 'রবিবার', sehri: '05:07', iftar: '06:03' },
+          { ramadan: 12, date: '2026-03-02', dayBangla: 'সোমবার', sehri: '05:06', iftar: '06:04' },
+          { ramadan: 13, date: '2026-03-03', dayBangla: 'মঙ্গলবার', sehri: '05:06', iftar: '06:04' },
+          { ramadan: 14, date: '2026-03-04', dayBangla: 'বুধবার', sehri: '05:06', iftar: '06:05' },
+          { ramadan: 15, date: '2026-03-05', dayBangla: 'বৃহস্পতিবার', sehri: '05:05', iftar: '06:05' },
+          { ramadan: 16, date: '2026-03-06', dayBangla: 'শুক্রবার', sehri: '05:03', iftar: '06:06' },
+          { ramadan: 17, date: '2026-03-07', dayBangla: 'শনিবার', sehri: '05:02', iftar: '06:06' },
+          { ramadan: 18, date: '2026-03-08', dayBangla: 'রবিবার', sehri: '05:01', iftar: '06:07' },
+          { ramadan: 19, date: '2026-03-09', dayBangla: 'সোমবার', sehri: '05:00', iftar: '06:07' },
+          { ramadan: 20, date: '2026-03-10', dayBangla: 'মঙ্গলবার', sehri: '04:59', iftar: '06:08' },
+          { ramadan: 21, date: '2026-03-11', dayBangla: 'বুধবার', sehri: '04:58', iftar: '06:08' },
+          { ramadan: 22, date: '2026-03-12', dayBangla: 'বৃহস্পতিবার', sehri: '04:57', iftar: '06:09' },
+          { ramadan: 23, date: '2026-03-13', dayBangla: 'শুক্রবার', sehri: '04:56', iftar: '06:09' },
+          { ramadan: 24, date: '2026-03-14', dayBangla: 'শনিবার', sehri: '04:55', iftar: '06:09' },
+          { ramadan: 25, date: '2026-03-15', dayBangla: 'রবিবার', sehri: '04:54', iftar: '06:10' },
+          { ramadan: 26, date: '2026-03-16', dayBangla: 'সোমবার', sehri: '04:53', iftar: '06:10' },
+          { ramadan: 27, date: '2026-03-17', dayBangla: 'মঙ্গলবার', sehri: '04:52', iftar: '06:10' },
+          { ramadan: 28, date: '2026-03-18', dayBangla: 'বুধবার', sehri: '04:51', iftar: '06:11' },
+          { ramadan: 29, date: '2026-03-19', dayBangla: 'বৃহস্পতিবার', sehri: '04:50', iftar: '06:11' },
+          { ramadan: 30, date: '2026-03-20', dayBangla: 'শুক্রবার', sehri: '04:49', iftar: '06:12' }
+        ],
 
-                calculateDiff(targetDate) {
-                    const now = new Date();
-                    const diff = targetDate - now;
+        initApp() {
+          this.updateTodayCard();
+          this.updateTimer();
+          setInterval(() => this.updateTimer(), 1000);
+          setTimeout(() => this.scrollToToday(), 800);
+        },
 
-                    if (diff > 0) {
-                        const h = Math.floor(diff / (1000 * 60 * 60));
-                        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                        const s = Math.floor((diff % (1000 * 60)) / 1000);
-                        
-                        this.timeLeftArray = [
-                            { value: this.toBangla(h).padStart(2, '০'), label: 'ঘণ্টা' },
-                            { value: this.toBangla(m).padStart(2, '০'), label: 'মিনিট' },
-                            { value: this.toBangla(s).padStart(2, '০'), label: 'সেকেন্ড' }
-                        ];
-                    }
-                }
+        getLocalDateString() {
+          const now = new Date();
+          const offset = now.getTimezoneOffset();
+          const localDate = new Date(now.getTime() - (offset * 60 * 1000));
+          return localDate.toISOString().split('T')[0];
+        },
+
+        isToday(dateString) {
+          return dateString === this.getLocalDateString();
+        },
+
+        formatDate(dateStr) {
+          const date = new Date(dateStr);
+          const months = ["জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন", "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর"];
+          return this.toBangla(date.getDate()) + ' ' + months[date.getMonth()];
+        },
+
+        toBangla(num) {
+          if (num === undefined || num === null) return '';
+          const banglaDigits = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+          return num.toString().split('').map(c => banglaDigits[c] || c).join('');
+        },
+
+        convertToBanglaTime(timeStr) {
+          if(!timeStr) return '';
+          return timeStr.split('').map(c => (c === ':' ? ':' : this.toBangla(c))).join('');
+        },
+
+        scrollToToday() {
+          const today = this.getLocalDateString();
+          const el = document.getElementById('day-' + today);
+          if (el) {
+            const yOffset = -18;
+            const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+          }
+        },
+
+        updateTodayCard() {
+          const todayStr = this.getLocalDateString();
+          const todayData = this.schedule.find(d => d.date === todayStr);
+          if (todayData) {
+            this.todayTitle = `রমজান ${this.toBangla(todayData.ramadan)} • ${this.formatDate(todayData.date)} • ${todayData.dayBangla}`;
+            this.todaySehriBangla = this.convertToBanglaTime(todayData.sehri);
+            this.todayIftarBangla = this.convertToBanglaTime(todayData.iftar);
+          } else {
+            this.todayTitle = 'আজকের তথ্য পাওয়া যায়নি';
+            this.todaySehriBangla = '';
+            this.todayIftarBangla = '';
+          }
+        },
+
+        // Create date safely for Sehri/Iftar.
+        // If iftar hour is < 12, treat it as evening for calculation (add 12).
+        createDate(baseDateStr, timeStr, type) {
+          const d = new Date(baseDateStr + 'T00:00:00');
+          const [hRaw, m] = timeStr.split(':').map(Number);
+          let h = hRaw;
+
+          if (type === 'iftar' && h < 12) h += 12;
+
+          d.setHours(h, m, 0, 0);
+          return d;
+        },
+
+        updateTimer() {
+          const now = new Date();
+          const todayStr = this.getLocalDateString();
+          const todayData = this.schedule.find(d => d.date === todayStr);
+
+          // keep today card fresh (in case day changes at midnight)
+          this.updateTodayCard();
+
+          let targetDate = null;
+
+          if (todayData) {
+            const sehriTime = this.createDate(todayStr, todayData.sehri, 'sehri');
+            const iftarTime = this.createDate(todayStr, todayData.iftar, 'iftar');
+
+            if (now < sehriTime) {
+              targetDate = sehriTime;
+              this.nextEventName = "সাহরীর শেষ সময়";
+              this.nextEventLabel = "সাহরীর সময় বাকি";
+              this.nextEventTime = todayData.sehri;
+            } else if (now >= sehriTime && now < iftarTime) {
+              targetDate = iftarTime;
+              this.nextEventName = "ইফতারের সময়";
+              this.nextEventLabel = "ইফতারের সময় বাকি";
+              this.nextEventTime = todayData.iftar;
+            } else {
+              this.setTomorrowSehri(now);
+              return;
             }
+          } else {
+            const futureDates = this.schedule.filter(d => new Date(d.date) > new Date(todayStr));
+            if (futureDates.length > 0) {
+              const nextDay = futureDates[0];
+              targetDate = this.createDate(nextDay.date, nextDay.sehri, 'sehri');
+              this.nextEventName = "পরবর্তী রোজা (সাহরী)";
+              this.nextEventTime = nextDay.sehri;
+              this.nextEventLabel = "রমজান চলমান/আসছে";
+            }
+          }
+
+          if (targetDate) this.calculateDiff(targetDate);
+        },
+
+        setTomorrowSehri(now) {
+          const tomorrow = new Date(now);
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          const tomorrowStr = tomorrow.toISOString().split('T')[0];
+          const tData = this.schedule.find(d => d.date === tomorrowStr);
+
+          if (tData) {
+            const tDate = this.createDate(tomorrowStr, tData.sehri, 'sehri');
+            this.calculateDiff(tDate);
+            this.nextEventName = "আগামীকাল সাহরী";
+            this.nextEventTime = tData.sehri;
+            this.nextEventLabel = "সাহরীর সময় বাকি";
+          }
+        },
+
+        calculateDiff(targetDate) {
+          const now = new Date();
+          const diff = targetDate - now;
+
+          if (diff > 0) {
+            const h = Math.floor(diff / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            this.timeLeftArray = [
+              { value: this.toBangla(h).padStart(2, '০'), label: 'ঘণ্টা' },
+              { value: this.toBangla(m).padStart(2, '০'), label: 'মিনিট' },
+              { value: this.toBangla(s).padStart(2, '০'), label: 'সেকেন্ড' }
+            ];
+          }
         }
-    </script>
+      }
+    }
+  </script>
 </body>
 </html>
